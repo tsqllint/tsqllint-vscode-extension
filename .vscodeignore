@@ -1,0 +1,6 @@
+**/*.ts
+**/*.log
+server/**/*
+tsconfig.json
+.gitignore
+client/server/tsqllint/**/*

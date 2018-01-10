@@ -1,0 +1,23 @@
+{
+	"name": "tsqllint-vs-extension",
+	"description": "A VS Code Extension For TSQLLint",
+	"author": "Nathan Boyd",
+	"license": "MIT",
+	"version": "0.0.2",
+	"publisher": "TSQLLint",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/tsqllint/tsqllint-vscode-extension"
+	},
+	"engines": {
+		"node": "*"
+	},
+	"dependencies": {
+		"vscode-languageserver": "^3.4.2"
+	},
+	"scripts": {
+		"installServer": "installServerIntoExtension ../client ./package.json ./tsconfig.json",
+		"compile": "installServerIntoExtension ../client ./package.json ./tsconfig.json && tsc -p .",
+		"watch": "installServerIntoExtension ../client ./package.json ./tsconfig.json && tsc -w -p ."
+	}
+}

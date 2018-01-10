@@ -1,0 +1,34 @@
+{
+	"name": "tsqllint",
+	"description": "A VS Code Extension For TSQLLint",
+	"author": "Nathan Boyd",
+	"license": "MIT",
+	"version": "0.0.2",
+	"publisher": "tsqllint",
+	"main": "client/out/src/extension",
+	"icon": "images/icon.png",
+	"activationEvents": [
+		"onLanguage:sql"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/tsqllint/tsqllint-vscode-extension"
+	},
+	"engines": {
+		"vscode": "^1.15.0"
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"postinstall": "cd server && npm install && cd ../client && npm install && cd ..",
+		"compile": "tsc -p client/tsconfig.json && cd server && npm run installServer && cd .. && tsc -p server/tsconfig.json",
+		"compile:client": "tsc -p client/tsconfig.json",
+		"watch:client": "tsc -w -p client/tsconfig.json",
+		"compile:server": "cd server && npm run installServer && cd .. && tsc -p server/tsconfig.json",
+		"watch:server": "cd server && npm run installServer && cd .. && tsc -w -p server/tsconfig.json"
+	},
+	"devDependencies": {
+		"@types/mocha": "^2.2.42",
+		"@types/node": "^6.0.88",
+		"typescript": "^2.5.2"
+	}
+}
