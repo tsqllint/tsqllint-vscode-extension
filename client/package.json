@@ -1,5 +1,5 @@
 {
-	"name": "tsqllint-vs-extension",
+	"name": "tsqllint-vs-extension-client",
 	"description": "A VS Code Extension For TSQLLint",
 	"author": "Nathan Boyd",
 	"license": "MIT",
