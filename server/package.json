@@ -10,14 +10,17 @@
 		"url": "https://github.com/tsqllint/tsqllint-vscode-extension"
 	},
 	"engines": {
-		"node": "*"
+		"node": "*",
+		"vscode": "^1.16.0"
 	},
 	"dependencies": {
+		"vscode": "^1.1.10",
 		"vscode-languageserver": "^3.4.2"
 	},
 	"scripts": {
-		"installServer": "installServerIntoExtension ../client ./package.json ./tsconfig.json",
-		"compile": "installServerIntoExtension ../client ./package.json ./tsconfig.json && tsc -p .",
-		"watch": "installServerIntoExtension ../client ./package.json ./tsconfig.json && tsc -w -p ."
+		"installVSCode": "node ./node_modules/vscode/bin/install",
+		"installServer": "npm run installVSCode && installServerIntoExtension ../client ./package.json ./tsconfig.json",
+		"compile": "npm run installVSCode && installServerIntoExtension ../client ./package.json ./tsconfig.json && tsc -p .",
+		"watch": "npm run installVSCode && installServerIntoExtension ../client ./package.json ./tsconfig.json && tsc -w -p ."
 	}
 }
