@@ -20,9 +20,10 @@
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
 		"compile": "npm run compile:client && npm run compile:server",
+		"watch": "npm run watch:client && npm run watch:server",
+		"compile:server": "cd server && npm run compile",
 		"compile:client": "cd client && npm run compile",
 		"watch:client": "cd client && npm run watch",
-		"compile:server": "cd server && npm run compile",
 		"watch:server": "cd server && npm run watch",
 		"clean": "rm -rf ./client/node_modules ./client/out ./client/server ./server/node_modules"
 	},
