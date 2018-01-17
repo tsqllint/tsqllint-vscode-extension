@@ -6,8 +6,6 @@ import {
 	CompletionItemKind
 } from 'vscode-languageserver';
 
-import { workspace, ExtensionContext } from 'vscode';
-
 import TSQLLintToolsHelper from './TSQLLintToolsHelper';
 import { ChildProcess } from 'child_process';
 
