@@ -29,7 +29,7 @@
 	},
 	"scripts": {
 		"installVSCode": "node ./node_modules/vscode/bin/install",
-		"compile": "npm run installVSCode && tsc -p ./",
-		"watch": "npm run installVSCode && tsc -w -p ./"
+		"compile": "npm install && npm run installVSCode && tsc -p ./",
+		"watch": "npm install && npm run installVSCode && tsc -w -p ./"
 	}
 }

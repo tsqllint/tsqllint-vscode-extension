@@ -19,12 +19,11 @@
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
-		"postinstall": "cd server && npm install && cd ../client && npm install && cd ..",
-		"compile": "tsc -p client/tsconfig.json && cd server && npm run installServer && cd .. && tsc -p server/tsconfig.json",
-		"compile:client": "tsc -p client/tsconfig.json",
-		"watch:client": "tsc -w -p client/tsconfig.json",
-		"compile:server": "cd server && npm run installServer && cd .. && tsc -p server/tsconfig.json",
-		"watch:server": "cd server && npm run installServer && cd .. && tsc -w -p server/tsconfig.json",
+		"compile": "npm run compile:client && npm run compile:server",
+		"compile:client": "cd client && npm run compile",
+		"watch:client": "cd client && npm run watch",
+		"compile:server": "cd server && npm run compile",
+		"watch:server": "cd server && npm run watch",
 		"clean": "rm -rf ./client/node_modules ./client/out ./client/server ./server/node_modules"
 	},
 	"devDependencies": {

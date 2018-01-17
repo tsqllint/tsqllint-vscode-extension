@@ -20,7 +20,7 @@
 	"scripts": {
 		"installVSCode": "node ./node_modules/vscode/bin/install",
 		"installServer": "installServerIntoExtension ../client ./package.json ./tsconfig.json",
-		"compile": "npm run installVSCode && tsc -p ./tsconfig.json && npm run installServer",
-		"watch": "npm run installVSCode && tsc -w -p ./tsconfig.json && npm run installServer"
+		"compile": "npm install && npm run installVSCode && tsc -p ./tsconfig.json && npm run installServer",
+		"watch": "npm install && npm run installVSCode && tsc -w -p ./tsconfig.json && npm run installServer"
 	}
 }
