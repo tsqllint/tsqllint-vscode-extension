@@ -14,9 +14,6 @@ var spawn = require('child_process').spawn;
 const os = require('os')
 var fs = require('fs')
 
-var tmp = require('tmp');
-tmp.setGracefulCleanup();
-
 var applicationRoot = path.parse(process.argv[1])
 
 let connection: IConnection = createConnection(new IPCMessageReader(process), new IPCMessageWriter(process));
