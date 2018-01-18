@@ -17,7 +17,6 @@
 		"decompress": "^4.2.0",
 		"decompress-targz": "^4.1.1",
 		"follow-redirects": "^1.2.6",
-		"progress": "^2.0.0",
 		"vscode-languageserver": "^3.4.2"
 	},
 	"scripts": {

@@ -5,6 +5,7 @@ import { workspace, ExtensionContext } from 'vscode';
 import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from 'vscode-languageclient';
 
 export function activate(context: ExtensionContext) {
+
 	let debugOptions = { execArgv: ["--nolazy", "--inspect=6009"] }; 
 
 	let serverOptions: ServerOptions = {

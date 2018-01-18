@@ -17,16 +17,17 @@ export default class TSQLLintToolsHelper {
 
     TSQLLintToolsPath(): Promise<string> {
         return new Promise<string>((resolve, reject) => {
+
             // prop is set
             if (TSQLLintToolsHelper._tsqllintToolsPath) {
                 return resolve(TSQLLintToolsHelper._tsqllintToolsPath);
             }
 
             let tsqllintInstallDirectory: string = `${TSQLLintToolsHelper._applicationRootDirectory}/tsqllint`
-            if(fs.existsSync(`${tsqllintInstallDirectory}/${TSQLLintToolsHelper._runTime}`)){
+            if (fs.existsSync(`${tsqllintInstallDirectory}/${TSQLLintToolsHelper._runTime}`)) {
                 TSQLLintToolsHelper._tsqllintToolsPath = tsqllintInstallDirectory;
                 return resolve(TSQLLintToolsHelper._tsqllintToolsPath);
-            } 
+            }
 
             // prop is not set but tsqllint is installed
             TSQLLintToolsHelper.downloadTSQLLint(tsqllintInstallDirectory).then((path: string) => {
@@ -64,6 +65,9 @@ export default class TSQLLintToolsHelper {
     }
 
     static downloadTSQLLint(installDirectory: string): Promise<string> {
+
+        console.log('Installing TSQLLint Runtime');
+        
         var version = 'v1.8.10'
         var urlBase = `https://github.com/tsqllint/tsqllint/releases/download/${version}`
         var downloadUrl = `${urlBase}/${TSQLLintToolsHelper._runTime}.tgz`
@@ -83,7 +87,7 @@ export default class TSQLLintToolsHelper {
                 if (res.statusCode != 200) {
                     fs.unlink(downloadPath)
                     return reject(new Error(`There was a problem downloading ${downloadUrl}`))
-                }
+                }   
             }).on('error', function (err: Error) {
                 fs.unlink(downloadPath)
                 reject(err)
