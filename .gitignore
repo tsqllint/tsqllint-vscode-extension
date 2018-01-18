@@ -1,4 +1,3 @@
-client/out/
-client/server/
-node_modules
+out/
+node_modules/
 *.vsix

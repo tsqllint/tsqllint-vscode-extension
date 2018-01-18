@@ -5,7 +5,7 @@
 	"license": "MIT",
 	"version": "0.0.2",
 	"publisher": "tsqllint",
-	"main": "client/out/src/extension",
+	"main": "/out/client/src/extension",
 	"icon": "images/icon.png",
 	"activationEvents": [
 		"onLanguage:sql"
@@ -18,14 +18,14 @@
 		"vscode": "^1.15.0"
 	},
 	"scripts": {
-		"vscode:prepublish": "npm run compile",
-		"compile": "npm run compile:client && npm run compile:server",
+		"build": "npm run build:client && npm run build:server",
 		"watch": "npm run watch:client && npm run watch:server",
-		"compile:server": "cd server && npm run compile",
-		"compile:client": "cd client && npm run compile",
+		"build:server": "cd server && npm run build",
+		"build:client": "cd client && npm run build",
 		"watch:client": "cd client && npm run watch",
 		"watch:server": "cd server && npm run watch",
-		"clean": "rm -rf ./client/node_modules ./client/out ./client/server ./server/node_modules"
+		"clean": "rm -rf out",
+		"vscode:prepublish": "npm run clean && npm run build"
 	},
 	"devDependencies": {
 		"@types/mocha": "^2.2.42",

@@ -14,13 +14,15 @@
 		"vscode": "^1.16.0"
 	},
 	"dependencies": {
-		"vscode": "^1.1.10",
+		"decompress": "^4.2.0",
+		"decompress-targz": "^4.1.1",
+		"follow-redirects": "^1.2.6",
+		"progress": "^2.0.0",
 		"vscode-languageserver": "^3.4.2"
 	},
 	"scripts": {
-		"installVSCode": "node ./node_modules/vscode/bin/install",
-		"installServer": "installServerIntoExtension ../client ./package.json ./tsconfig.json",
-		"compile": "npm install && npm run installVSCode && tsc -p ./tsconfig.json && npm run installServer",
-		"watch": "npm install && npm run installVSCode && tsc -w -p ./tsconfig.json && npm run installServer"
+		"build": "tsc -p ./",
+		"postbuild": "mkdir -p ../out/server/node_modules/ && cp -R node_modules ../out/server",
+		"watch": "tsc -watch -p ./"
 	}
 }

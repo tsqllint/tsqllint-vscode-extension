@@ -18,7 +18,7 @@
 	"activationEvents": [
 		"onLanguage:sql"
 	],
-	"main": "./out/src/extension",
+	"main": "./out/client/src/extension",
 	"dependencies": {
 		"decompress": "^4.2.0",
 		"decompress-targz": "^4.1.1",
@@ -28,8 +28,9 @@
 		"vscode-languageclient": "^3.4.2"
 	},
 	"scripts": {
-		"installVSCode": "node ./node_modules/vscode/bin/install",
-		"compile": "npm install && npm run installVSCode && tsc -p ./",
-		"watch": "npm install && npm run installVSCode && tsc -w -p ./"
+		"postinstall": "node ./node_modules/vscode/bin/install",
+		"build": "tsc -p ./",
+		"watch": "tsc -watch -p ./",
+		"postbuild": "mkdir -p ../out/client/node_modules/ && cp -R node_modules ../out/client"
 	}
 }
