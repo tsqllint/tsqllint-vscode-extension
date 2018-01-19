@@ -27,9 +27,9 @@
 		"vscode-languageclient": "^3.4.2"
 	},
 	"scripts": {
-		"postinstall": "node ./node_modules/vscode/bin/install",
 		"build": "tsc -p ./",
 		"watch": "tsc -watch -p ./",
-		"postbuild": "mkdir -p ../out/client/node_modules/ && cp -R node_modules ../out/client"
+		"postinstall": "node ./node_modules/vscode/bin/install && npm run copy-node-modules",
+		"copy-node-modules": "mkdir -p ../out/client/node_modules/ && cp -R node_modules ../out/client"
 	}
 }

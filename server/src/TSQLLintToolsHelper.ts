@@ -5,7 +5,6 @@ const os = require('os')
 const fs = require('fs')
 const decompress = require('decompress')
 const decompressTargz = require('decompress-targz')
-const ProgressBar = require('progress')
 
 export default class TSQLLintToolsHelper {
 

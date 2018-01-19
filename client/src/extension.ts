@@ -8,9 +8,11 @@ export function activate(context: ExtensionContext) {
 
 	let debugOptions = { execArgv: ["--nolazy", "--inspect=6009"] }; 
 
+	let serverModule = context.asAbsolutePath(path.join('out/server/src', 'server.js'));
+
 	let serverOptions: ServerOptions = {
-		run : { module: context.asAbsolutePath(path.join('server', 'server.js')), transport: TransportKind.ipc },
-		debug: { module: context.asAbsolutePath(path.join('out/server/src', 'server.js')), transport: TransportKind.ipc, options: debugOptions }
+		run : { module: serverModule, transport: TransportKind.ipc },
+		debug: { module: serverModule, transport: TransportKind.ipc, options: debugOptions }
 	}
 
 	let clientOptions: LanguageClientOptions = {

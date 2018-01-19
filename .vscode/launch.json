@@ -1,6 +1,5 @@
 {
 	"version": "0.2.0",
-	// List of configurations. Add new configurations or edit existing ones.
 	"configurations": [
         {
             "name": "Launch Client",
@@ -19,11 +18,11 @@
 			"request": "attach",
 			"port": 6009,
 			"sourceMaps": true,
+			"protocol": "inspector",
 			"outFiles": [
 				"${workspaceRoot}/client/server/**/*.js"
 			],
 			"preLaunchTask": "watch:server",
-			"protocol": "inspector"
 		}
 	]
 }
