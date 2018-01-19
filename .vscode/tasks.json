@@ -2,17 +2,17 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"taskName": "compile",
+			"label": "build",
 			"dependsOn": [
-				"compile:client",
-				"compile:server"
+				"build:client",
+				"build:server"
 			],
 			"problemMatcher": []
 		},
 		{
-			"label": "compile:client",
+			"label": "build:client",
 			"type": "npm",
-			"script": "compile:client",
+			"script": "build:client",
 			"group": "build",
 			"presentation": {
 				"panel": "dedicated",
@@ -23,9 +23,9 @@
 			]
 		},
 		{
-			"label": "compile:server",
+			"label": "build:server",
 			"type": "npm",
-			"script": "compile:server",
+			"script": "build:server",
 			"group": "build",
 			"presentation": {
 				"panel": "dedicated",
@@ -36,7 +36,7 @@
 			]
 		},
 		{
-			"taskName": "watch",
+			"label": "watch",
 			"dependsOn": [
 				"watch:client",
 				"watch:server"

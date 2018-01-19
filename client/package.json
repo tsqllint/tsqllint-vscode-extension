@@ -1,5 +1,5 @@
 {
-	"name": "tsqllint-vs-extension",
+	"name": "tsqllint-vs-extension-client",
 	"description": "A VS Code Extension For TSQLLint",
 	"author": "Nathan Boyd",
 	"license": "MIT",
@@ -18,46 +18,18 @@
 	"activationEvents": [
 		"onLanguage:sql"
 	],
-	"main": "./out/src/extension",
-	"contributes": {
-		"configuration": {
-			"type": "object",
-			"title": "Example configuration",
-			"properties": {
-				"lspSample.maxNumberOfProblems": {
-					"scope": "resource",
-					"type": "number",
-					"default": 100,
-					"description": "Controls the maximum number of problems produced by the server."
-				},
-				"lspSample.trace.server": {
-					"scope": "window",
-					"type": "string",
-					"enum": [
-						"off",
-						"messages",
-						"verbose"
-					],
-					"default": "off",
-					"description": "Traces the communication between VSCode and the language server."
-				}
-			}
-		}
-	},
-	"scripts": {
-		"vscode:prepublish": "tsc -p ./",
-		"compile": "tsc -p ./",
-		"watch": "tsc -w -p ./",
-		"update-vscode": "node ./node_modules/vscode/bin/install",
-		"postinstall": "node ./node_modules/vscode/bin/install"
-	},
+	"main": "./out/client/src/extension",
 	"dependencies": {
 		"decompress": "^4.2.0",
 		"decompress-targz": "^4.1.1",
 		"follow-redirects": "^1.2.6",
-		"progress": "^2.0.0",
-		"tmp": "0.0.33",
 		"vscode": "^1.1.5",
 		"vscode-languageclient": "^3.4.2"
+	},
+	"scripts": {
+		"build": "tsc -p ./",
+		"watch": "tsc -watch -p ./",
+		"postinstall": "node ./node_modules/vscode/bin/install && npm run copy-node-modules",
+		"copy-node-modules": "mkdir -p ../out/client/node_modules/ && cp -R node_modules ../out/client"
 	}
 }

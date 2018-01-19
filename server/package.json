@@ -1,5 +1,5 @@
 {
-	"name": "tsqllint-vs-extension",
+	"name": "tsqllint-vs-extension-server",
 	"description": "A VS Code Extension For TSQLLint",
 	"author": "Nathan Boyd",
 	"license": "MIT",
@@ -10,14 +10,19 @@
 		"url": "https://github.com/tsqllint/tsqllint-vscode-extension"
 	},
 	"engines": {
-		"node": "*"
+		"node": "*",
+		"vscode": "^1.16.0"
 	},
 	"dependencies": {
+		"decompress": "^4.2.0",
+		"decompress-targz": "^4.1.1",
+		"follow-redirects": "^1.2.6",
 		"vscode-languageserver": "^3.4.2"
 	},
 	"scripts": {
-		"installServer": "installServerIntoExtension ../client ./package.json ./tsconfig.json",
-		"compile": "installServerIntoExtension ../client ./package.json ./tsconfig.json && tsc -p .",
-		"watch": "installServerIntoExtension ../client ./package.json ./tsconfig.json && tsc -w -p ."
+		"build": "tsc -p ./",
+		"watch": "tsc -watch -p ./",
+		"postinstall": "npm run copy-node-modules",
+		"copy-node-modules": "mkdir -p ../out/server/node_modules/ && cp -R node_modules ../out/server"
 	}
 }
