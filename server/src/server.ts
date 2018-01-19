@@ -6,15 +6,15 @@ import {
 	CompletionItemKind
 } from 'vscode-languageserver';
 
-import TSQLLintToolsHelper from './TSQLLintToolsHelper';
+import TSQLLintRuntimeHelper from './TSQLLintToolsHelper';
 import { ChildProcess } from 'child_process';
 
-var path = require("path");
-var spawn = require('child_process').spawn;
+const path = require("path");
+const spawn = require('child_process').spawn;
 const os = require('os')
-var fs = require('fs')
+const fs = require('fs')
 
-var applicationRoot = path.parse(process.argv[1])
+const applicationRoot = path.parse(process.argv[1])
 
 let connection: IConnection = createConnection(new IPCMessageReader(process), new IPCMessageWriter(process));
 let documents: TextDocuments = new TextDocuments();
@@ -38,7 +38,7 @@ function getTempFilePath(textDocument: TextDocument) {
 }
 
 documents.onDidChangeContent((change) => {
-	validateTextDocument(change.document);
+	ValidateBuffer(change.document);
 });
 
 documents.onDidClose((change) => {
@@ -46,12 +46,11 @@ documents.onDidClose((change) => {
 	fs.unlinkSync(tempFilePath)
 })
 
-let toolsHelper: TSQLLintToolsHelper = new TSQLLintToolsHelper(applicationRoot.dir)
+let toolsHelper: TSQLLintRuntimeHelper = new TSQLLintRuntimeHelper(applicationRoot.dir)
 
-function lintBuffer(fileUri: string, callback: ((error: Error, result: string[]) => void)): void {
+function LintBuffer(fileUri: string, callback: ((error: Error, result: string[]) => void)): void {
 
-	toolsHelper.TSQLLintToolsPath().then((toolsPath: string) => {
-
+	toolsHelper.TSQLLintRuntime().then((toolsPath: string) => {
 		let childProcess: ChildProcess;
 
 		if (os.type() === 'Darwin') {
@@ -99,12 +98,12 @@ function lintBuffer(fileUri: string, callback: ((error: Error, result: string[])
 	})
 }
 
-function validateTextDocument(textDocument: TextDocument): void {
+function ValidateBuffer(textDocument: TextDocument): void {
 	let tempFilePath: string = getTempFilePath(textDocument);
 	fs.writeFileSync(tempFilePath, textDocument.getText());
 
 	let diagnostics: Diagnostic[] = [];
-	lintBuffer(tempFilePath, (error: Error, validateionErrors: string[]) => {
+	LintBuffer(tempFilePath, (error: Error, validateionErrors: string[]) => {
 		if (error) {
 			throw error;
 		}
@@ -147,4 +146,3 @@ function validateTextDocument(textDocument: TextDocument): void {
 }
 
 connection.listen();
-

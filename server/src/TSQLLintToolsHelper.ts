@@ -6,73 +6,80 @@ const fs = require('fs')
 const decompress = require('decompress')
 const decompressTargz = require('decompress-targz')
 
-export default class TSQLLintToolsHelper {
+export default class TSQLLintRuntimeHelper {
 
+    static _tsqllintVersion: string = 'v1.8.10'
     static _applicationRootDirectory: string;
     static _runTime: string;
     static _tsqllintToolsPath: string;
 
-    static _tsqllintVersion: string = 'v1.8.10'
-
-    TSQLLintToolsPath(): Promise<string> {
-        return new Promise<string>((resolve, reject) => {
-
-            // prop is set
-            if (TSQLLintToolsHelper._tsqllintToolsPath) {
-                return resolve(TSQLLintToolsHelper._tsqllintToolsPath);
-            }
-
-            let tsqllintInstallDirectory: string = `${TSQLLintToolsHelper._applicationRootDirectory}/tsqllint`
-            if (fs.existsSync(`${tsqllintInstallDirectory}/${TSQLLintToolsHelper._runTime}`)) {
-                TSQLLintToolsHelper._tsqllintToolsPath = tsqllintInstallDirectory;
-                return resolve(TSQLLintToolsHelper._tsqllintToolsPath);
-            }
-
-            // prop is not set but tsqllint is installed
-            TSQLLintToolsHelper.downloadTSQLLint(tsqllintInstallDirectory).then((path: string) => {
-                decompress(path, `${tsqllintInstallDirectory}`, {
-                    plugins: [
-                        decompressTargz()
-                    ]
-                }).then(() => {
-                    TSQLLintToolsHelper._tsqllintToolsPath = tsqllintInstallDirectory;
-                    return resolve(tsqllintInstallDirectory);
-                })
-            }).catch((error: Error) => {
-                console.log(error)
-                reject(error)
-            })
-        })
-    }
-
     constructor(applicationRootDirectory: string) {
-        TSQLLintToolsHelper._applicationRootDirectory = applicationRootDirectory;
+        TSQLLintRuntimeHelper._applicationRootDirectory = applicationRootDirectory;
 
         if (os.type() === 'Darwin') {
-            TSQLLintToolsHelper._runTime = 'osx-x64'
+            TSQLLintRuntimeHelper._runTime = 'osx-x64'
         } else if (os.type() === 'Linux') {
-            TSQLLintToolsHelper._runTime = 'linux-x64'
+            TSQLLintRuntimeHelper._runTime = 'linux-x64'
         } else if (os.type() === 'Windows_NT') {
             if (process.arch === 'ia32') {
-                TSQLLintToolsHelper._runTime = 'win-x86'
+                TSQLLintRuntimeHelper._runTime = 'win-x86'
             } else if (process.arch === 'x64') {
-                TSQLLintToolsHelper._runTime = 'win-x64'
+                TSQLLintRuntimeHelper._runTime = 'win-x64'
             }
         } else {
             throw new Error(`Invalid Platform: ${os.type()}`)
         }
     }
 
-    static downloadTSQLLint(installDirectory: string): Promise<string> {
+    TSQLLintRuntime(): Promise<string> {
+        return new Promise<string>((resolve, reject) => {
 
-        console.log('Installing TSQLLint Runtime');
-        
-        var version = 'v1.8.10'
-        var urlBase = `https://github.com/tsqllint/tsqllint/releases/download/${version}`
-        var downloadUrl = `${urlBase}/${TSQLLintToolsHelper._runTime}.tgz`
-        var downloadFilePath = `${installDirectory}/${TSQLLintToolsHelper._runTime}.tgz`
-        var downloadPath = `${installDirectory}/${TSQLLintToolsHelper._runTime}.tgz`
+            if (TSQLLintRuntimeHelper._tsqllintToolsPath) {
+                return resolve(TSQLLintRuntimeHelper._tsqllintToolsPath);
+            }
+
+            let tsqllintInstallDirectory: string = `${TSQLLintRuntimeHelper._applicationRootDirectory}/tsqllint`
+            if (fs.existsSync(`${tsqllintInstallDirectory}/${TSQLLintRuntimeHelper._runTime}`)) {
+                TSQLLintRuntimeHelper._tsqllintToolsPath = tsqllintInstallDirectory;
+                return resolve(TSQLLintRuntimeHelper._tsqllintToolsPath);
+            }
+
+            let download: Promise<string> = TSQLLintRuntimeHelper.DownloadRuntime(tsqllintInstallDirectory);
+
+            download.then((path: string) => {
+                return this.UnzipRuntime(path, tsqllintInstallDirectory);
+            }).then((tsqllintInstallDirectory: string) => {
+                console.log('Installation of TSQLLint Runtime Complete')
+                return resolve(tsqllintInstallDirectory);
+            }).catch((error: Error) => {
+                return reject(error)
+            })
+        })
+    }
+
+    private UnzipRuntime(path: string, tsqllintInstallDirectory: string) {
         return new Promise((resolve, reject) => {
+            decompress(path, `${tsqllintInstallDirectory}`, {
+                plugins: [
+                    decompressTargz()
+                ]
+            }).then(() => {
+                TSQLLintRuntimeHelper._tsqllintToolsPath = tsqllintInstallDirectory;
+                return resolve(tsqllintInstallDirectory);
+            }).catch((err: Error) => {
+                reject(err)
+            });
+        });
+    }
+
+    static DownloadRuntime(installDirectory: string): Promise<string> {
+        let urlBase: string = `https://github.com/tsqllint/tsqllint/releases/download/${this._tsqllintVersion}`
+        let downloadUrl: string = `${urlBase}/${TSQLLintRuntimeHelper._runTime}.tgz`
+        let downloadFilePath: string = `${installDirectory}/${TSQLLintRuntimeHelper._runTime}.tgz`
+        let downloadPath: string = `${installDirectory}/${TSQLLintRuntimeHelper._runTime}.tgz`
+        
+        return new Promise((resolve, reject) => {
+            console.log('Installing TSQLLint Runtime');
             if (!fs.existsSync(installDirectory)) {
                 fs.mkdirSync(installDirectory);
             }
@@ -81,7 +88,7 @@ export default class TSQLLintToolsHelper {
                 response.pipe(file)
                 file.on('finish', function () {
                     file.close(resolve(downloadPath))
-                })
+                });
             }).on('response', (res: any) => {
                 if (res.statusCode != 200) {
                     fs.unlink(downloadPath)
