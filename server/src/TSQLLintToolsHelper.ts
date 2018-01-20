@@ -58,15 +58,12 @@ export default class TSQLLintRuntimeHelper {
     }
 
     private UnzipRuntime(path: string, tsqllintInstallDirectory: string) {
-        console.log('ONE')
-
         return new Promise((resolve, reject) => {
             decompress(path, `${tsqllintInstallDirectory}`, {
                 plugins: [
                     decompressTargz()
                 ]
             }).then(() => {
-                console.log('TWO')
                 TSQLLintRuntimeHelper._tsqllintToolsPath = tsqllintInstallDirectory;
                 return resolve(tsqllintInstallDirectory);
             }).catch((err: Error) => {
