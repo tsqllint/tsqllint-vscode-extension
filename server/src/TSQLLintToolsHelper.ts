@@ -58,12 +58,15 @@ export default class TSQLLintRuntimeHelper {
     }
 
     private UnzipRuntime(path: string, tsqllintInstallDirectory: string) {
+        console.log('ONE')
+
         return new Promise((resolve, reject) => {
             decompress(path, `${tsqllintInstallDirectory}`, {
                 plugins: [
                     decompressTargz()
                 ]
             }).then(() => {
+                console.log('TWO')
                 TSQLLintRuntimeHelper._tsqllintToolsPath = tsqllintInstallDirectory;
                 return resolve(tsqllintInstallDirectory);
             }).catch((err: Error) => {
@@ -85,8 +88,26 @@ export default class TSQLLintRuntimeHelper {
             }
             var file = fs.createWriteStream(downloadFilePath)
             var request = https.get(downloadUrl, (response: any) => {
+                const length = Number(response.headers['content-length']);
                 response.pipe(file)
+
+                process.stdout.write('downloading...');
+
+                if (!isNaN(length)) {
+                    process.stdout.write(' [');
+                    const max = 60;
+                    let char = 0;
+                    let bytes = 0;
+                    response.on('data', (chunk: Buffer) => {
+                        bytes += chunk.length;
+                        let fill = Math.ceil((bytes / length) * max);
+                        for (let i = char; i < fill; i++) process.stdout.write('=');
+                        char = fill;
+                    });
+                    response.on('end', () => process.stdout.write(']'));
+                }
                 file.on('finish', function () {
+                    console.log(' done!');
                     file.close(resolve(downloadPath))
                 });
             }).on('response', (res: any) => {
