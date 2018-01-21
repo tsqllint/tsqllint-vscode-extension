@@ -3,6 +3,7 @@
 		"noUnusedParameters": true,
 		"noImplicitAny": true,
 		"noImplicitReturns": true,
+		"noUnusedLocals": true,
 		"target": "es6",
 		"module": "commonjs",
 		"moduleResolution": "node",

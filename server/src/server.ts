@@ -2,12 +2,12 @@
 
 import {
 	IPCMessageReader, IPCMessageWriter, createConnection, IConnection, TextDocuments, TextDocument,
-	Diagnostic, DiagnosticSeverity, InitializeResult, TextDocumentPositionParams, CompletionItem,
-	CompletionItemKind
-} from 'vscode-languageserver';
+	Diagnostic, DiagnosticSeverity, InitializeResult} from 'vscode-languageserver';
 
 import TSQLLintRuntimeHelper from './TSQLLintToolsHelper';
 import { ChildProcess } from 'child_process';
+import { getCommands, registerFileErrors } from './commands';
+import { parseErrors, ITsqlLintError } from './parseError';
 
 const path = require("path");
 const spawn = require('child_process').spawn;
@@ -20,15 +20,18 @@ let connection: IConnection = createConnection(new IPCMessageReader(process), ne
 let documents: TextDocuments = new TextDocuments();
 documents.listen(connection);
 
-let workspaceRoot: string;
-connection.onInitialize((params): InitializeResult => {
-	workspaceRoot = params.rootPath;
+// let workspaceRoot: string;
+connection.onInitialize((/*params*/): InitializeResult => {
+	// workspaceRoot = params.rootPath;
 	return {
 		capabilities: {
-			textDocumentSync: documents.syncKind
+			textDocumentSync: documents.syncKind,
+			codeActionProvider: true,
 		}
 	}
 });
+
+connection.onCodeAction(getCommands);
 
 function getTempFilePath(textDocument: TextDocument) {
 	let lintFilePath: string = textDocument.uri.split('file://')[1];
@@ -44,7 +47,7 @@ documents.onDidChangeContent((change) => {
 documents.onDidClose((change) => {
 	let tempFilePath: string = getTempFilePath(change.document);
 	fs.unlinkSync(tempFilePath)
-})
+});
 
 let toolsHelper: TSQLLintRuntimeHelper = new TSQLLintRuntimeHelper(applicationRoot.dir)
 
@@ -102,46 +105,25 @@ function ValidateBuffer(textDocument: TextDocument): void {
 	let tempFilePath: string = getTempFilePath(textDocument);
 	fs.writeFileSync(tempFilePath, textDocument.getText());
 
-	let diagnostics: Diagnostic[] = [];
-	LintBuffer(tempFilePath, (error: Error, validateionErrors: string[]) => {
+	LintBuffer(tempFilePath, (error: Error, lintErrorStrings: string[]) => {
 		if (error) {
+			registerFileErrors(textDocument, []);
 			throw error;
 		}
 
-		for (var i = 0; i < validateionErrors.length; i++) {
-			let validationError: string[] = validateionErrors[i].split(':');
-			let positionStr: string = validationError[0].replace('(', '').replace(')', '');
-			let positionArr: number[] = positionStr.split(',').map(Number);
-			let lineNumber: number = positionArr[0] - 1;
-
-			if(0 > lineNumber){
-				return;
-			}
-
-			let line: string = textDocument.getText().split('\n')[lineNumber];
-			if(undefined === line){
-				line = textDocument.getText();
-			}
-
-			let lineStart: number = 0;
-			const regex = /^(\s)*/g;
-			let regexResults: RegExpExecArray;
-			if ((regexResults = regex.exec(line)) !== null) {
-				lineStart = regexResults[0].length;
-			}
-
-			diagnostics.push({
-				severity: DiagnosticSeverity.Error,
-				range: {
-					start: { line: lineNumber, character: lineStart },
-					end: { line: lineNumber, character: line.length }
-				},
-				message: `${validationError[2].trim()}`,
-				source: `TSQLLint: ${validationError[1].trim()}`
-			});
-		}
+		const errors = parseErrors(textDocument.getText(), lintErrorStrings);
+		registerFileErrors(textDocument, errors);
+		const diagnostics = errors.map(toDiagnostic);
 
 		connection.sendDiagnostics({ uri: textDocument.uri, diagnostics });
+		function toDiagnostic(error: ITsqlLintError): Diagnostic {
+			return {
+				severity: DiagnosticSeverity.Error,
+				range: error.range,
+				message: error.message,
+				source: `TSQLLint: ${error.rule}`
+			};
+		}
 	})
 }
 
