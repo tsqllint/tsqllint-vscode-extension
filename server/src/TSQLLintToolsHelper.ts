@@ -87,7 +87,7 @@ export default class TSQLLintRuntimeHelper {
                 fs.mkdirSync(installDirectory);
             }
             var file = fs.createWriteStream(downloadFilePath)
-            var request = https.get(downloadUrl, (response: any) => {
+            https.get(downloadUrl, (response: any) => {
                 const length = Number(response.headers['content-length']);
                 response.pipe(file)
 
