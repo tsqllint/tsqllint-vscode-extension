@@ -58,15 +58,12 @@ export default class TSQLLintRuntimeHelper {
     }
 
     private UnzipRuntime(path: string, tsqllintInstallDirectory: string) {
-        console.log('ONE')
-
         return new Promise((resolve, reject) => {
             decompress(path, `${tsqllintInstallDirectory}`, {
                 plugins: [
                     decompressTargz()
                 ]
             }).then(() => {
-                console.log('TWO')
                 TSQLLintRuntimeHelper._tsqllintToolsPath = tsqllintInstallDirectory;
                 return resolve(tsqllintInstallDirectory);
             }).catch((err: Error) => {
@@ -82,7 +79,7 @@ export default class TSQLLintRuntimeHelper {
         let downloadPath: string = `${installDirectory}/${TSQLLintRuntimeHelper._runTime}.tgz`
         
         return new Promise((resolve, reject) => {
-            console.log('Installing TSQLLint Runtime');
+            console.log(`Installing TSQLLint Runtime: ${downloadUrl}`);
             if (!fs.existsSync(installDirectory)) {
                 fs.mkdirSync(installDirectory);
             }
@@ -90,8 +87,7 @@ export default class TSQLLintRuntimeHelper {
             var request = https.get(downloadUrl, (response: any) => {
                 const length = Number(response.headers['content-length']);
                 response.pipe(file)
-
-                process.stdout.write('downloading...');
+                process.stdout.write('Downloading...');
 
                 if (!isNaN(length)) {
                     process.stdout.write(' [');
@@ -104,16 +100,15 @@ export default class TSQLLintRuntimeHelper {
                         for (let i = char; i < fill; i++) process.stdout.write('=');
                         char = fill;
                     });
-                    response.on('end', () => process.stdout.write(']'));
+                    response.on('end', () => process.stdout.write(']\n'));
                 }
                 file.on('finish', function () {
-                    console.log(' done!');
                     file.close(resolve(downloadPath))
                 });
             }).on('response', (res: any) => {
                 if (res.statusCode != 200) {
                     fs.unlink(downloadPath)
-                    return reject(new Error(`There was a problem downloading ${downloadUrl}`))
+                    return reject(new Error(`There was a problem downloading the TSQLLint Runtime. Reload VS Code to try again`))
                 }   
             }).on('error', function (err: Error) {
                 fs.unlink(downloadPath)
