@@ -7,7 +7,7 @@
 		"module": "commonjs",
 		"moduleResolution": "node",
 		"rootDir": ".",
-		"outDir": "../out/client",
+		"outDir": "./out",
 		"lib": [ "es2016" ],
 		"sourceMap": true
 	}
