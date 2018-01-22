@@ -1,10 +1,9 @@
-'use strict';
+"use strict";
 
-import * as path from 'path';
-import { workspace, ExtensionContext } from 'vscode';
-import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from 'vscode-languageclient';
+import * as path from "path";
+import { ExtensionContext, workspace } from "vscode";
 import * as vscode from "vscode";
-
+import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from "vscode-languageclient";
 
 export function activate(context: ExtensionContext) {
 
@@ -56,5 +55,3 @@ function applyTextEdits(uri: string, documentVersion: number, edits: vscode.Text
 		vscode.commands.registerCommand("_tsql-lint.change", applyTextEdits)
 	);
 }
-
-
