@@ -21,7 +21,8 @@
 		"@types/mocha": "^2.2.42",
 		"@types/node": "^6.0.88",
 		"tslint": "^5.9.1",
-		"typescript": "^2.5.2"
+		"typescript": "^2.5.2",
+		"vsce": "^1.35.0"
 	},
 	"scripts": {
 		"install": "cd server && npm install && cd ../client && npm install",
