@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/nathan-boyd/tsqllint-vscode-extension.svg?branch=master)](https://travis-ci.org/nathan-boyd/tsqllint-vscode-extension)
+
 # TSQLLint VS Code Extension
 
 TSQLLint is a tool for describing, identifying, and reporting on undesirable patterns in TSQL scripts. This extension provides this functionality within VS Code.
