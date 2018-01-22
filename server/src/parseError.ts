@@ -1,22 +1,22 @@
 import { Range } from "vscode-languageserver/lib/main";
 
 export interface ITsqlLintError {
-    range: Range
+    range: Range;
     message: string;
     rule: string;
 }
 
 export function parseErrors(docText: string, errorStrings: string[]): ITsqlLintError[] {
-    const lines = docText.split('\n');
+    const lines = docText.split("\n");
     const lineStarts = lines.map((line) => line.match(/^\s*/)[0].length);
     return errorStrings.map(parseError).filter(isValidError);
     function parseError(errorString: string): ITsqlLintError {
-        const validationError: string[] = errorString.split(':');
-        const positionStr: string = validationError[0].replace('(', '').replace(')', '');
-        const positionArr: number[] = positionStr.split(',').map(Number);
+        const validationError: string[] = errorString.split(":");
+        const positionStr: string = validationError[0].replace("(", "").replace(")", "");
+        const positionArr: number[] = positionStr.split(",").map(Number);
 
         const line = positionArr[0] - 1;
-        const colStart = lineStarts[line]
+        const colStart = lineStarts[line];
         const colEnd = lines[line].length;
         const range: Range = {
             start: {line, character: colStart},
