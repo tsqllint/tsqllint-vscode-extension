@@ -30,6 +30,7 @@
 		"build:server": "cd server && npm run build",
 		"watch:client": "cd server && npm run build && cd ../client && npm run watch",
 		"watch:server": "cd server && npm run watch",
-		"clean": "rm -rf out"
+		"clean": "rm -rf out",
+		"lint": "tslint -c ./tslint.json --project ./client/tsconfig.json && tslint -c ./tslint.json --project ./server/tsconfig.json"
 	}
 }
