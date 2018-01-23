@@ -1,28 +1,26 @@
 {
-	"version": "0.2.0",
-	"configurations": [
+    "version": "0.1.0",
+    "configurations": [
         {
-            "name": "Launch Client",
+            "name": "Launch Extension",
             "type": "extensionHost",
             "request": "launch",
             "runtimeExecutable": "${execPath}",
             "args": ["--extensionDevelopmentPath=${workspaceRoot}" ],
             "stopOnEntry": false,
             "sourceMaps": true,
-			"outFiles": [ "${workspaceRoot}/out/**/*.js" ],
-			"preLaunchTask": "watch:client"
+            "outFiles": [ "${workspaceRoot}/out/**/*.js" ],
+            "preLaunchTask": "npm: watch"
         },
-		{
-			"name": "Attach to Server",
+        {
+			"name": "Attach to server",
 			"type": "node",
 			"request": "attach",
-			"port": 6009,
-			"sourceMaps": true,
+			"address": "localhost",
 			"protocol": "inspector",
-			"outFiles": [
-				"${workspaceRoot}/client/server/**/*.js"
-			],
-			"preLaunchTask": "watch:server",
+			"port": 6010,
+			"sourceMaps": true,
+			"outFiles": ["${workspaceRoot}/../tslint/server/**/*.js"]
 		}
-	]
+    ]
 }

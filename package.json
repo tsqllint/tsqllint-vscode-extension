@@ -25,13 +25,7 @@
 		"vsce": "^1.35.0"
 	},
 	"scripts": {
-		"install": "cd server && npm install && cd ../client && npm install",
-		"build": "npm run build:client && npm run build:server",
-		"build:client": "cd client && npm run build",
-		"build:server": "cd server && npm run build",
-		"watch:client": "cd server && npm run build && cd ../client && npm run watch",
-		"watch:server": "cd server && npm run watch",
-		"clean": "rm -rf out",
-		"lint": "tslint -c ./tslint.json '**/src/**/*.ts'"
+		"lint": "tslint -c ./tslint.json '**/src/**/*.ts'",
+		"install": "cd server && npm install && cd ../client && npm install"
 	}
 }
