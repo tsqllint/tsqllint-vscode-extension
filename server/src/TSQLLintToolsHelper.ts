@@ -45,6 +45,7 @@ export default class TSQLLintRuntimeHelper {
                 }
                 file.on("finish", () => {
                     file.close();
+                    resolve(downloadPath);
                 });
             }).on("response", (res: any) => {
                 if (res.statusCode !== 200) {
