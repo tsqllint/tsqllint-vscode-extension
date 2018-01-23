@@ -20,7 +20,8 @@
 		"vscode-languageserver": "^3.4.2"
 	},
 	"scripts": {
-		"build": "tsc -p ./",
-		"watch": "tsc -watch -p ./"
+		"compile": "npm run installServer && tsc -p ./",
+		"watch": "npm run installServer && tsc --watch -p ./",
+		"installServer": "installServerIntoExtension ../client/out ./package.json ./tsconfig.json"
 	}
 }

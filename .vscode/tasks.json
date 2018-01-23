@@ -2,17 +2,17 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"label": "build",
+			"label": "compile",
 			"dependsOn": [
-				"build:client",
-				"build:server"
+				"compile:client",
+				"compile:server"
 			],
 			"problemMatcher": []
 		},
 		{
-			"label": "build:client",
+			"label": "compile:client",
 			"type": "npm",
-			"script": "build:client",
+			"script": "compile:client",
 			"group": "build",
 			"presentation": {
 				"panel": "dedicated",
@@ -23,9 +23,9 @@
 			]
 		},
 		{
-			"label": "build:server",
+			"label": "compile:server",
 			"type": "npm",
-			"script": "build:server",
+			"script": "compile:server",
 			"group": "build",
 			"presentation": {
 				"panel": "dedicated",
