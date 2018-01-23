@@ -10,7 +10,7 @@
             "stopOnEntry": false,
             "sourceMaps": true,
             "outFiles": [ "${workspaceRoot}/out/**/*.js" ],
-            "preLaunchTask": "npm: watch"
+            "preLaunchTask": "watch:client"
         },
         {
 			"name": "Attach to server",
@@ -20,7 +20,8 @@
 			"protocol": "inspector",
 			"port": 6010,
 			"sourceMaps": true,
-			"outFiles": ["${workspaceRoot}/../tslint/server/**/*.js"]
+            "outFiles": ["${workspaceRoot}/../tslint/server/**/*.js"],
+            "preLaunchTask": "watch:server"
 		}
     ]
 }
