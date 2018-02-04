@@ -11,13 +11,17 @@ install:
 
 script:
 - npm run lint
+- npm run compile
 - vsce package
 
+before_deploy:
+  - export RELEASE_PKG_FILE=$(ls *.vsix)
+  - echo "deploying $RELEASE_PKG_FILE to GitHub Releases"
 deploy:
   provider: releases
-  api_key: $GithubToken
+  api_key: "$GithubToken"
   file_glob: true
-  file: /**\.vsix/
+  file: "${RELEASE_PKG_FILE}"
   skip_cleanup: true
   on:
     tags: true
