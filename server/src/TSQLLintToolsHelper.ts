@@ -61,7 +61,7 @@ export default class TSQLLintRuntimeHelper {
         });
     }
 
-    private static _tsqllintVersion: string = "v1.8.10";
+    private static _tsqllintVersion: string = "v1.9.1";
     private static _applicationRootDirectory: string;
     private static _runTime: string;
     private static _tsqllintToolsPath: string;
