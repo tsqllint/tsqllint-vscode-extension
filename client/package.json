@@ -3,7 +3,7 @@
 	"description": "A VS Code Extension For TSQLLint",
 	"author": "Nathan Boyd",
 	"license": "MIT",
-	"version": "0.0.2",
+	"version": "1.0.0",
 	"publisher": "TSQLLint",
 	"repository": {
 		"type": "git",
