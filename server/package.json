@@ -16,8 +16,8 @@
 	"dependencies": {
 		"decompress": "^4.2.0",
 		"decompress-targz": "^4.1.1",
-		"follow-redirects": "^1.2.6",
-		"vscode-languageserver": "^3.4.2"
+		"follow-redirects": "^1.4.1",
+		"vscode-languageserver": "^3.5.1"
 	},
 	"scripts": {
 		"compile": "npm run installServer && tsc -p ./",
