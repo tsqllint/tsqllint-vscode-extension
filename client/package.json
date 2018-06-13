@@ -17,9 +17,6 @@
     ],
     "main": "./out/client/src/extension",
     "dependencies": {
-        "decompress": "^4.2.0",
-        "decompress-targz": "^4.1.1",
-        "follow-redirects": "^1.4.1",
         "vscode": "^1.1.18",
         "vscode-languageclient": "^4.2.1"
     },

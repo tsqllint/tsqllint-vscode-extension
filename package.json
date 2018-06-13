@@ -5,7 +5,35 @@
     "license": "MIT",
     "version": "1.1.0",
     "publisher": "tsqllint",
-    "main": "./client/out/src/extension",
+    "categories": [
+        "Linters"
+    ],
+    "main": "./client/out/extension",
+    "contributes": {
+        "configuration": {
+            "type": "object",
+            "title": "TSQLLint Configuration",
+            "properties": {
+                "languageServerExample.maxNumberOfProblems": {
+                    "scope": "resource",
+                    "type": "number",
+                    "default": 100,
+                    "description": "Controls the maximum number of problems produced by the server."
+                },
+                "languageServerExample.trace.server": {
+                    "scope": "window",
+                    "type": "string",
+                    "enum": [
+                        "off",
+                        "messages",
+                        "verbose"
+                    ],
+                    "default": "off",
+                    "description": "Traces the communication between VSCode and the language server."
+                }
+            }
+        }
+    },
     "icon": "images/icon.png",
     "activationEvents": [
         "onLanguage:sql"
