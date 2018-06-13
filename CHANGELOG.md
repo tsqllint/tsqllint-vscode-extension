@@ -1,3 +1,12 @@
+<a name="1.2.0"></a>
+## 1.2.0 (2018-06-13)
+
+* Add clean script and tsconfig base ([ad228f1](https://github.com/tsqllint/tsqllint-vscode-extension/commit/ad228f1))
+* Update build to support packaging ([28a31ed](https://github.com/tsqllint/tsqllint-vscode-extension/commit/28a31ed))
+* Updated vscode settings to hide client/out directory ([595362b](https://github.com/tsqllint/tsqllint-vscode-extension/commit/595362b))
+
+
+
 <a name="1.1.0"></a>
 ## 1.1.0 (2018-06-13)
 
