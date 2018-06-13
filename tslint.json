@@ -3,6 +3,12 @@
     "extends": [
         "tslint:recommended"
     ],
+    "linterOptions": {
+      "exclude": [
+          "**/out/**/*",
+          "**/node_modules/**/*"
+      ]
+    },
     "jsRules": {},
     "rules": {
         "indent": [true, "spaces", 2],
