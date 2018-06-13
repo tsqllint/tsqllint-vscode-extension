@@ -1,32 +1,32 @@
 {
-	"name": "tsqllint-vs-extension-client",
+    "name": "tsqllint-vs-extension-client",
     "description": "The client for the TSQLLint VS Code Extension",
-	"author": "Nathan Boyd",
-	"license": "MIT",
-	"version": "1.0.0",
-	"publisher": "TSQLLint",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/tsqllint/tsqllint-vscode-extension"
-	},
-	"engines": {
-		"vscode": "^1.16.0"
-	},
-	"activationEvents": [
-		"onLanguage:sql"
-	],
-	"main": "./out/client/src/extension",
-	"dependencies": {
-		"decompress": "^4.2.0",
-		"decompress-targz": "^4.1.1",
-		"follow-redirects": "^1.4.1",
-		"vscode": "^1.1.17",
-		"vscode-languageclient": "^3.5.1"
-	},
-	"scripts": {
-		"compile": "tsc -p ./",
-		"watch": "tsc -watch -p ./",
-		"postinstall": "node ./node_modules/vscode/bin/install",
-		"vscode:prepublish": "cd ../server && npm run compile && cd ../client && tsc -p ./"
-	}
+    "author": "Nathan Boyd",
+    "license": "MIT",
+    "version": "1.0.0",
+    "publisher": "TSQLLint",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/tsqllint/tsqllint-vscode-extension"
+    },
+    "engines": {
+        "vscode": "^1.23.0"
+    },
+    "activationEvents": [
+        "onLanguage:sql"
+    ],
+    "main": "./out/client/src/extension",
+    "dependencies": {
+        "decompress": "^4.2.0",
+        "decompress-targz": "^4.1.1",
+        "follow-redirects": "^1.4.1",
+        "vscode": "^1.1.18",
+        "vscode-languageclient": "^4.2.1"
+    },
+    "scripts": {
+        "compile": "tsc -p ./",
+        "watch": "tsc -watch -p ./",
+        "postinstall": "node ./node_modules/vscode/bin/install",
+        "vscode:prepublish": "cd ../server && npm run compile && cd ../client && tsc -p ./"
+    }
 }

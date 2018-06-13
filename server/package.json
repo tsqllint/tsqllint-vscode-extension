@@ -1,27 +1,27 @@
 {
-	"name": "tsqllint-vs-extension-server",
-	"description": "A VS Code Extension For TSQLLint",
-	"author": "Nathan Boyd",
-	"license": "MIT",
-	"version": "1.0.0",
-	"publisher": "TSQLLint",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/tsqllint/tsqllint-vscode-extension"
-	},
-	"engines": {
-		"node": "*",
-		"vscode": "^1.16.0"
-	},
-	"dependencies": {
-		"decompress": "^4.2.0",
-		"decompress-targz": "^4.1.1",
-		"follow-redirects": "^1.4.1",
-		"vscode-languageserver": "^3.5.1"
-	},
-	"scripts": {
-		"compile": "npm run installServer && tsc -p ./",
-		"watch": "npm run installServer && tsc --watch -p ./",
-		"installServer": "installServerIntoExtension ../client/out ./package.json ./tsconfig.json"
-	}
+    "name": "tsqllint-vs-extension-server",
+    "description": "A VS Code Extension For TSQLLint",
+    "author": "Nathan Boyd",
+    "license": "MIT",
+    "version": "1.0.0",
+    "publisher": "TSQLLint",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/tsqllint/tsqllint-vscode-extension"
+    },
+    "engines": {
+        "node": "*",
+        "vscode": "^1.23.0"
+    },
+    "dependencies": {
+        "decompress": "^4.2.0",
+        "decompress-targz": "^4.1.1",
+        "follow-redirects": "^1.4.1",
+        "vscode-languageserver": "^4.2.1"
+    },
+    "scripts": {
+        "compile": "npm run installServer && tsc -p ./",
+        "watch": "npm run installServer && tsc --watch -p ./",
+        "installServer": "installServerIntoExtension ../client/out ./package.json ./tsconfig.json"
+    }
 }
