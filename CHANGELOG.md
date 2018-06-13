@@ -1,3 +1,18 @@
+<a name="1.1.0"></a>
+## 1.1.0 (2018-06-13)
+
+* Add Changelog ([4fb344f](https://github.com/tsqllint/tsqllint-vscode-extension/commit/4fb344f))
+* Add release and changelog tooling ([cd504a9](https://github.com/tsqllint/tsqllint-vscode-extension/commit/cd504a9))
+* Add tslint exclusion for node_modules ([06db554](https://github.com/tsqllint/tsqllint-vscode-extension/commit/06db554))
+* Remove category and update description for client package ([8604095](https://github.com/tsqllint/tsqllint-vscode-extension/commit/8604095))
+* Update build scripts ([8b2738b](https://github.com/tsqllint/tsqllint-vscode-extension/commit/8b2738b))
+* Update client dependencies ([9da44ab](https://github.com/tsqllint/tsqllint-vscode-extension/commit/9da44ab))
+* Update dependencies ([32970e7](https://github.com/tsqllint/tsqllint-vscode-extension/commit/32970e7))
+* Update server dependencies ([97a98d8](https://github.com/tsqllint/tsqllint-vscode-extension/commit/97a98d8))
+* Update tsqllint dependency ([fa94fd5](https://github.com/tsqllint/tsqllint-vscode-extension/commit/fa94fd5))
+
+
+
 # Change Log
 
 ## [v1.0.0](https://github.com/tsqllint/tsqllint-vscode-extension/tree/v1.0.0) (2018-02-05)
