@@ -20,13 +20,16 @@
     "devDependencies": {
         "@types/mocha": "^2.2.42",
         "@types/node": "^6.0.88",
+        "conventional-changelog": "^2.0.1",
+        "release-it": "^7.4.7",
         "standard": "^11.0.1",
         "tslint": "^5.9.1",
         "typescript": "^2.5.2",
         "vsce": "^1.42.0"
     },
     "scripts": {
-       "lint": "tslint -c ./tslint.json '**/src/**/*.ts'",
+        "lint": "tslint -c ./tslint.json '**/src/**/*.ts'",
+        "build-changelog": "conventional-changelog -i CHANGELOG.md -u -s -r 0 && git add CHANGELOG.md",
         "vscode:prepublish": "cd client && npm run update-vscode && cd .. && npm run compile",
         "compile:client": "tsc -p ./client/tsconfig.json",
         "compile:server": "tsc -p ./server/tsconfig.json",
