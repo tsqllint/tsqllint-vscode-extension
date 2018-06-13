@@ -1,6 +1,6 @@
 {
 	"name": "tsqllint-vs-extension-client",
-	"description": "A VS Code Extension For TSQLLint",
+    "description": "The client for the TSQLLint VS Code Extension",
 	"author": "Nathan Boyd",
 	"license": "MIT",
 	"version": "1.0.0",
@@ -12,9 +12,6 @@
 	"engines": {
 		"vscode": "^1.16.0"
 	},
-	"categories": [
-		"Other"
-	],
 	"activationEvents": [
 		"onLanguage:sql"
 	],
