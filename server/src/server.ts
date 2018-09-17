@@ -13,6 +13,7 @@ import { spawn } from "child_process";
 import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
+import * as uid from "uid-safe";
 
 const applicationRoot = path.parse(process.argv[1]);
 
@@ -33,20 +34,8 @@ connection.onInitialize((/*params*/): InitializeResult => {
 
 connection.onCodeAction(getCommands);
 
-function getTempFilePath(textDocument: TextDocument) {
-  const lintFilePath: string = textDocument.uri.split("file://")[1];
-  const lintFileName: string = path.basename(lintFilePath);
-  const tempFilePath: string = `${os.tmpdir()}/${lintFileName}.tmp`;
-  return tempFilePath;
-}
-
 documents.onDidChangeContent((change) => {
   ValidateBuffer(change.document);
-});
-
-documents.onDidClose((change) => {
-  const tempFilePath: string = getTempFilePath(change.document);
-  fs.unlinkSync(tempFilePath);
 });
 
 const toolsHelper: TSQLLintRuntimeHelper = new TSQLLintRuntimeHelper(applicationRoot.dir);
@@ -101,8 +90,14 @@ function LintBuffer(fileUri: string, callback: ((error: Error, result: string[])
   });
 }
 
+function TempFilePath(textDocument: TextDocument) {
+  const ext = path.extname(textDocument.uri) || ".sql";
+  const name = uid.sync(18) + ext;
+  return path.join(os.tmpdir(), name);
+}
+
 function ValidateBuffer(textDocument: TextDocument): void {
-  const tempFilePath: string = getTempFilePath(textDocument);
+  const tempFilePath: string = TempFilePath(textDocument);
   fs.writeFileSync(tempFilePath, textDocument.getText());
 
   LintBuffer(tempFilePath, (error: Error, lintErrorStrings: string[]) => {
@@ -124,6 +119,7 @@ function ValidateBuffer(textDocument: TextDocument): void {
         source: `TSQLLint: ${lintError.rule}`,
       };
     }
+    fs.unlinkSync(tempFilePath);
   });
 }
 
