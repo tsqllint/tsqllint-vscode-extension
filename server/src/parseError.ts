@@ -1,5 +1,7 @@
 import { Range } from "vscode-languageserver/lib/main";
 
+export const hello = () => 'Hello world!';
+
 export interface ITsqlLintError {
     range: Range;
     message: string;
