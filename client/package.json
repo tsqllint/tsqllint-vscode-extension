@@ -17,7 +17,7 @@
     ],
     "main": "./out/client/src/extension",
     "dependencies": {
-        "vscode": "^1.1.18",
+        "vscode": "^1.1.21",
         "vscode-languageclient": "^4.2.1"
     },
     "scripts": {
