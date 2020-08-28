@@ -17,7 +17,10 @@ export function parseErrors(docText: string, errorStrings: string[]): ITsqlLintE
 
         const line = Math.max(positionArr[0] - 1, 0);
         const colStart = lineStarts[line];
-        const colEnd = lines[line].length;
+        var colEnd = 0;
+        if (lines[line]) {
+            colEnd = lines[line].length;
+        }
         const range: Range = {
             start: {line, character: colStart},
             end: {line, character: colEnd},
