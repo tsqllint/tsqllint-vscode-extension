@@ -1,7 +1,7 @@
 "use strict";
 
 import {
-  createConnection, Diagnostic, DiagnosticSeverity, IConnection, InitializeResult, IPCMessageReader,
+  createConnection, Diagnostic, IConnection, InitializeResult, IPCMessageReader,
   IPCMessageWriter, TextDocument, TextDocuments} from "vscode-languageserver";
 
 import { ChildProcess } from "child_process";
@@ -113,7 +113,7 @@ function ValidateBuffer(textDocument: TextDocument): void {
     connection.sendDiagnostics({ uri: textDocument.uri, diagnostics });
     function toDiagnostic(lintError: ITsqlLintError): Diagnostic {
       return {
-        severity: DiagnosticSeverity.Error,
+        severity: lintError.severity,
         range: lintError.range,
         message: lintError.message,
         source: `TSQLLint: ${lintError.rule}`,

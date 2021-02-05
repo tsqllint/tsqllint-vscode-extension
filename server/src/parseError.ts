@@ -1,9 +1,10 @@
-import { Range } from "vscode-languageserver/lib/main";
+import { DiagnosticSeverity, Range } from "vscode-languageserver/lib/main";
 
 export interface ITsqlLintError {
     range: Range;
     message: string;
     rule: string;
+    severity: DiagnosticSeverity;
 }
 
 export function parseErrors(docText: string, errorStrings: string[]): ITsqlLintError[] {
@@ -14,10 +15,12 @@ export function parseErrors(docText: string, errorStrings: string[]): ITsqlLintE
         const validationError: string[] = errorString.split(":");
         const positionStr: string = validationError[0].replace("(", "").replace(")", "");
         const positionArr: number[] = positionStr.split(",").map(Number);
+        const severityRuleName: string[] = validationError[1].trim().split(" ");
+        const reportedSeverity: DiagnosticSeverity = matchDiagnosticSeverity(severityRuleName[0]);
 
         const line = Math.max(positionArr[0] - 1, 0);
         const colStart = lineStarts[line];
-        var colEnd = 0;
+        let colEnd = 0;
         if (lines[line]) {
             colEnd = lines[line].length;
         }
@@ -29,9 +32,21 @@ export function parseErrors(docText: string, errorStrings: string[]): ITsqlLintE
             range,
             message: validationError[2].trim(),
             rule: validationError[1].trim(),
+            severity: reportedSeverity,
         };
     }
 }
 function isValidError(error: ITsqlLintError): boolean {
     return error.range.start.line >= 0;
+}
+
+function matchDiagnosticSeverity(severityName: string): DiagnosticSeverity {
+  switch(severityName) {
+    case "error":
+      return DiagnosticSeverity.Error;
+    case "warning":
+      return DiagnosticSeverity.Warning;
+    default:
+      return DiagnosticSeverity.Information;
+  }
 }
