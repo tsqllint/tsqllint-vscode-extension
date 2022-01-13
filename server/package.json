@@ -16,7 +16,7 @@
         "@types/uid-safe": "^2.1.2",
         "decompress": "^4.2.0",
         "decompress-targz": "^4.1.1",
-        "follow-redirects": "^1.4.1",
+        "follow-redirects": "^1.14.7",
         "uid-safe": "^2.1.5",
         "vscode-languageserver": "^4.2.1"
     }
