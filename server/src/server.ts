@@ -1,9 +1,7 @@
 "use strict";
 
-import {
-  createConnection, Diagnostic, DiagnosticSeverity, IConnection, InitializeResult, IPCMessageReader,
-  IPCMessageWriter, TextDocument, TextDocuments} from "vscode-languageserver";
-
+import { createConnection, Diagnostic, DiagnosticSeverity, ProposedFeatures, InitializeResult, TextDocuments, TextDocumentSyncKind } from 'vscode-languageserver/node';
+import { TextDocument } from 'vscode-languageserver-textdocument';
 import { ChildProcess } from "child_process";
 import { getCommands, registerFileErrors } from "./commands";
 import { ITsqlLintError, parseErrors } from "./parseError";
@@ -17,8 +15,9 @@ import * as uid from "uid-safe";
 
 const applicationRoot = path.parse(process.argv[1]);
 
-const connection: IConnection = createConnection(new IPCMessageReader(process), new IPCMessageWriter(process));
-const documents: TextDocuments = new TextDocuments();
+const connection = createConnection(ProposedFeatures.all);
+const documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
+
 documents.listen(connection);
 
 // let workspaceRoot: string;
@@ -26,7 +25,7 @@ connection.onInitialize((/*params*/): InitializeResult => {
   // workspaceRoot = params.rootPath;
   return {
     capabilities: {
-      textDocumentSync: documents.syncKind,
+      textDocumentSync: TextDocumentSyncKind.Incremental,
       codeActionProvider: true,
     },
   };

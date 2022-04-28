@@ -1,14 +1,16 @@
 "use strict";
 
 import * as path from "path";
-import { ExtensionContext, workspace } from "vscode";
-import * as vscode from "vscode";
-import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from "vscode-languageclient";
+import { workspace, ExtensionContext, window, TextEdit, commands } from "vscode";
+import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from "vscode-languageclient/node";
+
+let client: LanguageClient;
 
 export function activate(context: ExtensionContext) {
-
+  const serverModule = context.asAbsolutePath(
+    path.join("server", "out", "server.js")
+  );
   const debugOptions = { execArgv: ["--nolazy", "--inspect=6009"] };
-  const serverModule = context.asAbsolutePath(path.join("server", "out", "server.js"));
 
   const serverOptions: ServerOptions = {
     run : { module: serverModule, transport: TransportKind.ipc },
@@ -23,15 +25,15 @@ export function activate(context: ExtensionContext) {
     },
   };
 
-  const client = new LanguageClient("tsqllint", "TSQLLint", serverOptions, clientOptions);
+  client = new LanguageClient("tsqllint", "TSQLLint", serverOptions, clientOptions);
   client.registerProposedFeatures();
 
-  function applyTextEdits(uri: string, documentVersion: number, edits: vscode.TextEdit[]) {
-  const textEditor = vscode.window.activeTextEditor;
+  function applyTextEdits(uri: string, documentVersion: number, edits: TextEdit[]) {
+  const textEditor = window.activeTextEditor;
   if (textEditor && textEditor.document.uri.toString() === uri) {
     if (textEditor.document.version !== documentVersion) {
-      vscode.window.showInformationMessage(
-        `SqlLint fixes are outdated and can't be applied to the document.`,
+      window.showInformationMessage(
+        `SqlLint fixes are outdated and can"t be applied to the document.`,
       );
     }
     textEditor.edit((mutator) => {
@@ -40,7 +42,7 @@ export function activate(context: ExtensionContext) {
       }
     }).then((success) => {
       if (!success) {
-        vscode.window.showErrorMessage(
+        window.showErrorMessage(
           "Failed to apply SqlLint fixes to the document. " +
           "Please consider opening an issue with steps to reproduce.",
         );
@@ -50,6 +52,13 @@ export function activate(context: ExtensionContext) {
 }
   context.subscriptions.push(
     client.start(),
-    vscode.commands.registerCommand("_tsql-lint.change", applyTextEdits),
+    commands.registerCommand("_tsql-lint.change", applyTextEdits),
   );
+}
+
+export function deactivate(): Thenable<void> | undefined {
+  if (!client) {
+    return undefined;
+  }
+  return client.stop();
 }

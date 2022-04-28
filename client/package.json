@@ -10,18 +10,17 @@
         "url": "https://github.com/tsqllint/tsqllint-vscode-extension"
     },
     "engines": {
-        "vscode": "^1.23.0"
+        "vscode": "^1.52.0"
     },
     "activationEvents": [
         "onLanguage:sql"
     ],
-    "main": "./out/client/src/extension",
+    "scripts": {},
     "dependencies": {
-        "vscode": "^1.1.18",
-        "vscode-languageclient": "^4.2.1"
+        "vscode-languageclient": "^7.0.0"
     },
-    "scripts": {
-        "update-vscode": "node ./node_modules/vscode/bin/install",
-        "postinstall": "node ./node_modules/vscode/bin/install"
+    "devDependencies": {
+        "@types/node": "^17.0.29",
+        "@types/vscode": "^1.52.0"
     }
 }
