@@ -84,7 +84,7 @@ export default class TSQLLintRuntimeHelper {
         }
     }
 
-    public TSQLLintRuntime(): Promise<string> {
+    public async TSQLLintRuntime(): Promise<string> {
         return new Promise<string>((resolve, reject) => {
 
             if (TSQLLintRuntimeHelper._tsqllintToolsPath) {
