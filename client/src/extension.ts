@@ -20,12 +20,12 @@ export function activate(context: ExtensionContext) {
   const clientOptions: LanguageClientOptions = {
     documentSelector: [{scheme: "file", language: "sql"}],
     synchronize: {
-      configurationSection: "tsqllint",
+      configurationSection: "tsqlLint",
       fileEvents: workspace.createFileSystemWatcher("**/.clientrc"),
     },
   };
 
-  client = new LanguageClient("tsqllint", "TSQLLint", serverOptions, clientOptions);
+  client = new LanguageClient("tsqlLint", "TSQL Lint", serverOptions, clientOptions);
   client.registerProposedFeatures();
 
   function applyTextEdits(uri: string, documentVersion: number, edits: TextEdit[]) {

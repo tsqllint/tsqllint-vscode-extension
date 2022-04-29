@@ -12,7 +12,7 @@
     "contributes": {
         "configuration": {
             "type": "object",
-            "title": "TSQLLint Configuration",
+            "title": "TSQL Lint Configuration",
             "properties": {
                 "tsqlLint.maxNumberOfProblems": {
                     "scope": "resource",
