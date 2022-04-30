@@ -64,7 +64,7 @@ connection.onNotification("fix", async (uri: string) => {
   // IMPORTANT! It's syntactially correct to pass textDocument to TextDocumentEdit.create, but it won't work. 
   // You'll get a very vauge error like:
   // ResponseError: Request workspace/applyEdit failed with message: Unknown workspace edit change received:
-  // Shout out to finally finding this issues and looking to see how he fixed it.
+  // Shoutout to finally finding this issues and looking to see how he fixed it.
   // https://github.com/stylelint/vscode-stylelint/issues/329
   // https://github.com/stylelint/vscode-stylelint/compare/v1.2.0..v1.2.1
   const identifier = { uri: textDocument.uri, version: textDocument.version };
@@ -97,7 +97,7 @@ async function getTextEdit(d: TextDocument, force: boolean = false): Promise<Tex
   }];
 }
 
-const toolsHelper: TSQLLintRuntimeHelper = new TSQLLintRuntimeHelper("D:\\dev\\git\\tsqllint\\source\\TSQLLint\\bin\\Debug\\netcoreapp5.0");
+const toolsHelper: TSQLLintRuntimeHelper = new TSQLLintRuntimeHelper(applicationRoot.dir);
 
 async function LintBuffer(fileUri: string, shouldFix: boolean): Promise<string[]> {
 
@@ -112,16 +112,17 @@ async function LintBuffer(fileUri: string, shouldFix: boolean): Promise<string[]
   }
 
   if (os.type() === "Darwin") {
-    childProcess = spawn(`${toolsPath}/osx-x64/TSQLLint.Console ${shouldFix ? '-x' : ''}`, args);
+    childProcess = spawn(`${toolsPath}/osx-x64/TSQLLint.Console`, args);
   } else if (os.type() === "Linux") {
-    childProcess = spawn(`${toolsPath}/linux-x64/TSQLLint.Console ${shouldFix ? '-x' : ''}`, args);
+    childProcess = spawn(`${toolsPath}/linux-x64/TSQLLint.Console`, args);
   } else if (os.type() === "Windows_NT") {
     if (os.type() === "Windows_NT") {
       if (process.arch === "ia32") {
-        childProcess = spawn(`${toolsPath}/win-x86/TSQLLint.Console.exe ${shouldFix ? '-x' : ''}`, args);
+        childProcess = spawn(`${toolsPath}/win-x86/TSQLLint.Console.exe`, args);
       } else if (process.arch === "x64") {
-        toolsPath = 'D:\\dev\\git\\tsqllint\\source\\TSQLLint\\bin\\Debug\\netcoreapp5.0\\TSQLLint.exe';
-        childProcess = spawn(`${toolsPath}`, args);
+        // run locally
+        // childProcess = spawn("D:\\dev\\git\\tsqllint\\source\\TSQLLint\\bin\\Debug\\netcoreapp5.0\\TSQLLint.exe", args);
+        childProcess = spawn(`${toolsPath}/win-x64/TSQLLint.Console.exe`, args);
       } else {
         throw new Error(`Invalid Platform: ${os.type()}, ${process.arch}`);
       }
