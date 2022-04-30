@@ -1,7 +1,18 @@
 "use strict";
 
-import { createConnection, Diagnostic, DiagnosticSeverity, ProposedFeatures, InitializeResult, TextDocuments, TextDocumentSyncKind, TextEdit, Command, CodeAction, TextDocumentEdit, WorkspaceEdit, WorkspaceChange, InitializeParams } from 'vscode-languageserver/node';
-import { TextDocument } from 'vscode-languageserver-textdocument';
+import {
+  createConnection,
+  Diagnostic,
+  DiagnosticSeverity,
+  ProposedFeatures,
+  TextDocuments,
+  TextDocumentSyncKind,
+  TextEdit,
+  TextDocumentEdit,
+  WorkspaceEdit,
+  InitializeParams
+} from "vscode-languageserver/node";
+import { TextDocument } from "vscode-languageserver-textdocument";
 import { ChildProcess } from "child_process";
 import { getCommands, registerFileErrors } from "./commands";
 import { ITsqlLintError, parseErrors } from "./parseError";
@@ -32,11 +43,7 @@ connection.onDidChangeConfiguration(change => {
 
 documents.listen(connection);
 
-// let workspaceRoot: string;
 connection.onInitialize((params: InitializeParams) => {
-  let capabilities = params.capabilities;
-  capabilities.workspace.workspaceEdit.documentChanges = true;
-  // workspaceRoot = params.rootPath;
   return {
     capabilities: {
       textDocumentSync: {
@@ -60,7 +67,7 @@ documents.onDidChangeContent(async change => {
 connection.onNotification("fix", async (uri: string) => {
   const textDocument = documents.get(uri);
   var edits = await getTextEdit(textDocument, true);
-  // The fuckery that I wasted 12 hours on...
+  // The fuckery that I wasted 6 hours on...
   // IMPORTANT! It's syntactially correct to pass textDocument to TextDocumentEdit.create, but it won't work. 
   // You'll get a very vauge error like:
   // ResponseError: Request workspace/applyEdit failed with message: Unknown workspace edit change received:
@@ -107,7 +114,7 @@ async function LintBuffer(fileUri: string, shouldFix: boolean): Promise<string[]
 
     let args = [fileUri];
     if (shouldFix) {
-      args.push('-x');
+      args.push("-x");
     }
 
     if (os.type() === "Darwin") {
@@ -119,8 +126,8 @@ async function LintBuffer(fileUri: string, shouldFix: boolean): Promise<string[]
         if (process.arch === "ia32") {
           childProcess = spawn(`${toolsPath}/win-x86/TSQLLint.Console.exe`, args);
         } else if (process.arch === "x64") {
-          //childProcess = spawn("D:\\dev\\git\\tsqllint\\source\\TSQLLint\\bin\\Debug\\netcoreapp5.0\\TSQLLint.exe", args);
-          childProcess = spawn(`${toolsPath}/win-x64/TSQLLint.Console.exe`, args);
+          childProcess = spawn("D:\\dev\\git\\tsqllint\\source\\TSQLLint\\bin\\Debug\\netcoreapp5.0\\TSQLLint.exe", args);
+          //childProcess = spawn(`${toolsPath}/win-x64/TSQLLint.Console.exe`, args);
         } else {
           throw new Error(`Invalid Platform: ${os.type()}, ${process.arch}`);
         }

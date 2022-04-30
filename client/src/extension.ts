@@ -32,8 +32,6 @@ export function activate(context: ExtensionContext) {
     client.sendNotification("fix", window.activeTextEditor.document.uri.toString() );
   }
 
-
-
   function applyTextEdits(uri: string, documentVersion: number, edits: TextEdit[]) {
     const textEditor = window.activeTextEditor;
     if (textEditor && textEditor.document.uri.toString() === uri) {
