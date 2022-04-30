@@ -1,6 +1,6 @@
 "use strict";
 
-import { createConnection, Diagnostic, DiagnosticSeverity, ProposedFeatures, InitializeResult, TextDocuments, TextDocumentSyncKind, TextDocumentContentChangeEvent, TextEdit, RequestHandler, TextDocumentWillSaveEvent, HandlerResult } from 'vscode-languageserver/node';
+import { createConnection, Diagnostic, DiagnosticSeverity, ProposedFeatures, InitializeResult, TextDocuments, TextDocumentSyncKind, TextEdit, Command, CodeAction, TextDocumentEdit, WorkspaceEdit, WorkspaceChange, InitializeParams } from 'vscode-languageserver/node';
 import { TextDocument } from 'vscode-languageserver-textdocument';
 import { ChildProcess } from "child_process";
 import { getCommands, registerFileErrors } from "./commands";
@@ -17,11 +17,25 @@ const applicationRoot = path.parse(process.argv[1]);
 
 const connection = createConnection(ProposedFeatures.all);
 const documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
+interface TsqlLintSettings {
+  autoFixOnSave: boolean;
+}
+
+const defaultSettings: TsqlLintSettings = { autoFixOnSave: false };
+let globalSettings: TsqlLintSettings = defaultSettings;
+
+connection.onDidChangeConfiguration(change => {
+  globalSettings = <TsqlLintSettings>(
+    (change.settings.tsqlLint || defaultSettings)
+  );
+});
 
 documents.listen(connection);
 
 // let workspaceRoot: string;
-connection.onInitialize((/*params*/): InitializeResult => {
+connection.onInitialize((params: InitializeParams) => {
+  let capabilities = params.capabilities;
+  capabilities.workspace.workspaceEdit.documentChanges = true;
   // workspaceRoot = params.rootPath;
   return {
     capabilities: {
@@ -43,7 +57,29 @@ documents.onDidChangeContent(async change => {
   await ValidateBuffer(change.document, null);
 });
 
-async function getTextEdit(d: TextDocument): Promise<TextEdit[]> {
+connection.onNotification("fix", async (uri: string) => {
+  const textDocument = documents.get(uri);
+  var edits = await getTextEdit(textDocument, true);
+  // The fuckery that I wasted 12 hours on...
+  // IMPORTANT! It's syntactially correct to pass textDocument to TextDocumentEdit.create, but it won't work. 
+  // You'll get a very vauge error like:
+  // ResponseError: Request workspace/applyEdit failed with message: Unknown workspace edit change received:
+  // Shout out to finally finding this issues and looking to see how he fixed it.
+  // https://github.com/stylelint/vscode-stylelint/issues/329
+  // https://github.com/stylelint/vscode-stylelint/compare/v1.2.0..v1.2.1
+  const identifier = { uri: textDocument.uri, version: textDocument.version };
+  var textDocumentEdits = TextDocumentEdit.create(identifier, edits);
+  var workspaceEdit: WorkspaceEdit = { documentChanges: [textDocumentEdits] };
+  await connection.workspace.applyEdit(workspaceEdit);
+});
+
+documents.onWillSaveWaitUntil(e => getTextEdit(e.document))
+
+async function getTextEdit(d: TextDocument, force: boolean = false): Promise<TextEdit[]> {
+  if (!force && !globalSettings.autoFixOnSave) {
+    return [];
+  }
+
   var test = await ValidateBuffer(d, true);
 
   return [{
@@ -60,8 +96,6 @@ async function getTextEdit(d: TextDocument): Promise<TextEdit[]> {
     newText: test
   }];
 }
-
-documents.onWillSaveWaitUntil(e => getTextEdit(e.document))
 
 const toolsHelper: TSQLLintRuntimeHelper = new TSQLLintRuntimeHelper("D:\\dev\\git\\tsqllint\\source\\TSQLLint\\bin\\Debug\\netcoreapp5.0");
 
@@ -110,7 +144,7 @@ async function LintBuffer(fileUri: string, shouldFix: boolean): Promise<string[]
     console.log(`stderr: ${data}`);
   }
 
-  await new Promise( (resolve, reject) => {
+  await new Promise((resolve, reject) => {
     childProcess.on('close', resolve);
   });
 
@@ -128,16 +162,13 @@ async function ValidateBuffer(textDocument: TextDocument, shouldFix: boolean): P
   fs.writeFileSync(tempFilePath, textDocument.getText());
 
   let lintErrorStrings;
+
   try {
     lintErrorStrings = await LintBuffer(tempFilePath, shouldFix);
   }
   catch (error) {
     registerFileErrors(textDocument, []);
     throw error;
-  }
-
-  if(!lintErrorStrings) {
-    return;
   }
 
   const errors = parseErrors(textDocument.getText(), lintErrorStrings);

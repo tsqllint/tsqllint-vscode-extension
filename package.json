@@ -14,12 +14,6 @@
             "type": "object",
             "title": "TSQL Lint Configuration",
             "properties": {
-                "tsqlLint.maxNumberOfProblems": {
-                    "scope": "resource",
-                    "type": "number",
-                    "default": 100,
-                    "description": "Controls the maximum number of problems produced by the server."
-                },
                 "tsqlLint.trace.server": {
                     "scope": "window",
                     "type": "string",
@@ -28,11 +22,30 @@
                         "messages",
                         "verbose"
                     ],
-                    "default": "off",
+                    "default": "verbose",
                     "description": "Traces the communication between VSCode and the language server."
+                },
+                "tsqlLint.autoFixOnSave": {
+                    "scope": "window",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Auto fix supported linting errors on save."
                 }
             }
-        }
+        },
+        "commands": [
+            {
+                "command": "tsqlLint.fix",
+                "title": "TSQL Lint: Fix"
+            }
+        ],
+        "keybindings": [
+            {
+                "command": "tsqlLint.fix",
+                "key": "ctrl+alt+f",
+                "mac": "shift+cmd+f"
+            }
+        ]
     },
     "icon": "images/icon.png",
     "activationEvents": [
