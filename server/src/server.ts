@@ -100,56 +100,60 @@ async function getTextEdit(d: TextDocument, force: boolean = false): Promise<Tex
 const toolsHelper: TSQLLintRuntimeHelper = new TSQLLintRuntimeHelper(applicationRoot.dir);
 
 async function LintBuffer(fileUri: string, shouldFix: boolean): Promise<string[]> {
+  const toolsPath = await toolsHelper.TSQLLintRuntime();
 
-  var toolsPath = await toolsHelper.TSQLLintRuntime();
+  let result: string[] = await new Promise((resolve, reject) => {
+    let childProcess: ChildProcess;
 
-  let childProcess: ChildProcess;
+    let args = [fileUri];
+    if (shouldFix) {
+      args.push('-x');
+    }
 
-  let args = [fileUri];
-
-  if (shouldFix) {
-    args.push('-x');
-  }
-
-  if (os.type() === "Darwin") {
-    childProcess = spawn(`${toolsPath}/osx-x64/TSQLLint.Console`, args);
-  } else if (os.type() === "Linux") {
-    childProcess = spawn(`${toolsPath}/linux-x64/TSQLLint.Console`, args);
-  } else if (os.type() === "Windows_NT") {
-    if (os.type() === "Windows_NT") {
-      if (process.arch === "ia32") {
-        childProcess = spawn(`${toolsPath}/win-x86/TSQLLint.Console.exe`, args);
-      } else if (process.arch === "x64") {
-        // run locally
-        // childProcess = spawn("D:\\dev\\git\\tsqllint\\source\\TSQLLint\\bin\\Debug\\netcoreapp5.0\\TSQLLint.exe", args);
-        childProcess = spawn(`${toolsPath}/win-x64/TSQLLint.Console.exe`, args);
-      } else {
-        throw new Error(`Invalid Platform: ${os.type()}, ${process.arch}`);
+    if (os.type() === "Darwin") {
+      childProcess = spawn(`${toolsPath}/osx-x64/TSQLLint.Console`, args);
+    } else if (os.type() === "Linux") {
+      childProcess = spawn(`${toolsPath}/linux-x64/TSQLLint.Console`, args);
+    } else if (os.type() === "Windows_NT") {
+      if (os.type() === "Windows_NT") {
+        if (process.arch === "ia32") {
+          childProcess = spawn(`${toolsPath}/win-x86/TSQLLint.Console.exe`, args);
+        } else if (process.arch === "x64") {
+          childProcess = spawn("D:\\dev\\git\\tsqllint\\source\\TSQLLint\\bin\\Debug\\netcoreapp5.0\\TSQLLint.exe", args);
+          //childProcess = spawn(`${toolsPath}/win-x64/TSQLLint.Console.exe`, args);
+        } else {
+          throw new Error(`Invalid Platform: ${os.type()}, ${process.arch}`);
+        }
       }
+    } else {
+      throw new Error(`Invalid Platform: ${os.type()}, ${process.arch}`);
     }
-  } else {
-    throw new Error(`Invalid Platform: ${os.type()}, ${process.arch}`);
-  }
 
-  let resultsArr = [];
+    let result: string;
+    childProcess.stdout.on("data", (data: string) => {
+      result += data;
+    });
 
-  for await (const data of childProcess.stdout) {
-    const value = data.toString();
-    const index = value.indexOf("(");
-    if (index > 0) {
-      resultsArr.push(value.substring(index, value.length - 1));
-    }
-  }
+    childProcess.stderr.on("data", (data: string) => {
+      console.log(`stderr: ${data}`);
+    });
 
-  for await (const data of childProcess.stderr) {
-    console.log(`stderr: ${data}`);
-  }
+    childProcess.on("close", () => {
+      const list: string[] = result.split("\n");
+      const resultsArr: string[] = new Array();
 
-  await new Promise((resolve, reject) => {
-    childProcess.on('close', resolve);
+      list.forEach((element) => {
+        const index = element.indexOf("(");
+        if (index > 0) {
+          resultsArr.push(element.substring(index, element.length - 1));
+        }
+      });
+
+      resolve(resultsArr);
+    });
   });
 
-  return resultsArr;
+  return result;
 }
 
 function TempFilePath(textDocument: TextDocument) {
