@@ -126,8 +126,8 @@ async function LintBuffer(fileUri: string, shouldFix: boolean): Promise<string[]
         if (process.arch === "ia32") {
           childProcess = spawn(`${toolsPath}/win-x86/TSQLLint.Console.exe`, args);
         } else if (process.arch === "x64") {
-          childProcess = spawn("D:\\dev\\git\\tsqllint\\source\\TSQLLint\\bin\\Debug\\netcoreapp5.0\\TSQLLint.exe", args);
-          //childProcess = spawn(`${toolsPath}/win-x64/TSQLLint.Console.exe`, args);
+          //childProcess = spawn("D:\\dev\\git\\tsqllint\\source\\TSQLLint\\bin\\Debug\\netcoreapp5.0\\TSQLLint.exe", args);
+          childProcess = spawn(`${toolsPath}/win-x64/TSQLLint.Console.exe`, args);
         } else {
           throw new Error(`Invalid Platform: ${os.type()}, ${process.arch}`);
         }
