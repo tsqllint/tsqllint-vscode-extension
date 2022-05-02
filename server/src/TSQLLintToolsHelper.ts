@@ -49,13 +49,13 @@ export default class TSQLLintRuntimeHelper {
                 });
             }).on("response", (res: any) => {
                 if (res.statusCode !== 200) {
-                    fs.unlink(downloadPath);
+                    fs.unlink(downloadPath, () => {});
                     return reject(
                         new Error(`There was a problem downloading the TSQLLint Runtime. Reload VS Code to try again`),
                     );
                 }
             }).on("error", (err: Error) => {
-                fs.unlink(downloadPath);
+                fs.unlink(downloadPath, () => {});
                 reject(err);
             });
         });
@@ -84,7 +84,7 @@ export default class TSQLLintRuntimeHelper {
         }
     }
 
-    public TSQLLintRuntime(): Promise<string> {
+    public async TSQLLintRuntime(): Promise<string> {
         return new Promise<string>((resolve, reject) => {
 
             if (TSQLLintRuntimeHelper._tsqllintToolsPath) {

@@ -14,13 +14,7 @@
             "type": "object",
             "title": "TSQLLint Configuration",
             "properties": {
-                "languageServerExample.maxNumberOfProblems": {
-                    "scope": "resource",
-                    "type": "number",
-                    "default": 100,
-                    "description": "Controls the maximum number of problems produced by the server."
-                },
-                "languageServerExample.trace.server": {
+                "tsqlLint.trace.server": {
                     "scope": "window",
                     "type": "string",
                     "enum": [
@@ -30,9 +24,28 @@
                     ],
                     "default": "off",
                     "description": "Traces the communication between VSCode and the language server."
+                },
+                "tsqlLint.autoFixOnSave": {
+                    "scope": "window",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Auto fix supported linting errors on save."
                 }
             }
-        }
+        },
+        "commands": [
+            {
+                "command": "tsqlLint.fix",
+                "title": "TSQL Lint: Fix"
+            }
+        ],
+        "keybindings": [
+            {
+                "command": "tsqlLint.fix",
+                "key": "ctrl+alt+f",
+                "mac": "shift+cmd+f"
+            }
+        ]
     },
     "icon": "images/icon.png",
     "activationEvents": [
@@ -43,20 +56,22 @@
         "url": "https://github.com/tsqllint/tsqllint-vscode-extension"
     },
     "engines": {
-        "vscode": "^1.23.0"
+        "vscode": "^1.52.0"
     },
     "devDependencies": {
         "@types/mocha": "^2.2.42",
-        "@types/node": "^6.0.88",
+        "@types/node": "^17.0.29",
+        "@typescript-eslint/eslint-plugin": "^5.21.0",
+        "@typescript-eslint/parser": "^5.21.0",
         "conventional-changelog": "^2.0.1",
+        "eslint": "^8.14.0",
         "release-it": "^7.4.7",
         "standard": "^11.0.1",
-        "tslint": "^5.9.1",
-        "typescript": "^2.5.2",
+        "typescript": "^4.6.3",
         "vsce": "^1.42.0"
     },
     "scripts": {
-        "lint": "tslint -c ./tslint.json '**/src/**/*.ts'",
+        "lint": "eslint -c .eslintrc.js --ext .ts",
         "build-changelog": "conventional-changelog -i CHANGELOG.md -u -s -r 0 && git add CHANGELOG.md",
         "vscode:prepublish": "cd client && npm run update-vscode && cd .. && npm run compile",
         "compile:client": "tsc -p ./client/tsconfig.json",

@@ -1,4 +1,4 @@
-import { Range } from "vscode-languageserver/lib/main";
+import { Range } from "vscode-languageserver/node";
 
 export interface ITsqlLintError {
     range: Range;

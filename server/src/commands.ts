@@ -1,6 +1,6 @@
 import * as server from "vscode-languageserver";
-import { CodeActionParams } from "vscode-languageserver-protocol/lib/main";
-import { Command, Position, TextDocument } from "vscode-languageserver/lib/main";
+import { Command, Position, CodeActionParams } from "vscode-languageserver-protocol/node";
+import { TextDocument } from 'vscode-languageserver-textdocument';
 import { ITsqlLintError } from "./parseError";
 
 interface IEdit {
@@ -19,6 +19,12 @@ export function registerFileErrors(file: TextDocument, errors: ITsqlLintError[])
     commandStore[file.uri] = errors.map(toDiagnosticCommands);
     function toDiagnosticCommands(error: ITsqlLintError): IDiagnosticCommands {
         const {start, end} = error.range;
+        
+        // Prevent crashing by making sure there are still at least this many lines.
+        if(lines.length <= start.line){
+            return null;
+        }
+        
         const space = lines[start.line].match(/^\s*/)[0];
         return {
             error,
