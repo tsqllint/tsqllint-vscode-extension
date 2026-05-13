@@ -10,31 +10,12 @@ import {
 } from "vscode";
 
 /**
- * For the fellow maintainers:
- * 
- * Register `variable autocomplete and rename` providers for SQL `@variables`
- * 
- * Case example:
- * ```sql
- * DECLARE \@something VARCHAR(10)
- * DECLARE \@someone VARCHAR(10)
- * DECLARE \@nothing VARCHAR(10)
- * 
- * -- some random queries
- * SELECT \@some -- expected: will suggest \@something and \@someone
- * 
- * -- lets say you select \@someone , pressing F2 (refactor/rename)
- * -- will rename all variables in current document with same name.
- * ```
- * 
- * Comment out the function call in [extension.ts] `activate()` to disable 
- * this feature in case this do break something and you don't have so much
- * time to fix.
- * 
- * after all, this is just a sugar add-on, nice to keep AS LONG AS the main
- * extension feature doesn't break. I tested and it works fine locally, but
- * doesn't guarantee it's fully safe for the publishing. (tbh still figuring
- * out what some other parts of the code are doing. this ext is amazing!) --ideeyn
+ * Registers variable autocomplete and rename providers for SQL @variables.
+ *
+ * Autocomplete suggests @variables declared earlier in the document.
+ * F2 rename renames all occurrences of the variable in the current file.
+ *
+ * To disable, comment out the registerVarAutocomplete() call in extension.ts.
  */
 export function registerVarAutocomplete(context: ExtensionContext): void {
     // =========================================================
@@ -57,13 +38,7 @@ export function registerVarAutocomplete(context: ExtensionContext): void {
                 const startText = startMatch ? startMatch[0] : "@";
                 const endText = endMatch ? endMatch[0] : "";
 
-                /// NOTE: this one will suggest all in entire document, dont care is it BEFORE or AFTER cursor.
-                /// scanning entire document:
-                // const text = document.getText();
-                // const vars = [...new Set((text.match(/@[a-zA-Z_][a-zA-Z0-9_]*/g) || []))];
-
-                /// NOTE: this one only suggest what is BEFORE CURSOR.
-                /// only consider text before the current word:
+                // Only suggest variables declared before the cursor position.
                 const currentWordStart = position.character - startText.length;
                 const textBeforeCursor = document.getText(
                     new Range(0, 0, position.line, currentWordStart)
@@ -149,7 +124,11 @@ export function registerVarAutocomplete(context: ExtensionContext): void {
                     "\\$&",
                 );
 
-                const regex = new RegExp(escaped, "g");
+                // "gi" for case-insensitive matching: T-SQL variable references are
+                // case-insensitive (@myVar and @MYVAR are the same variable).
+                // Note: this operates on raw document text, so occurrences inside
+                // string literals or comments will also be renamed.
+                const regex = new RegExp(escaped, "gi");
 
                 const edit = new WorkspaceEdit();
 
