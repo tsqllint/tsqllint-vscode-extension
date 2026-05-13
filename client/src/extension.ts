@@ -1,8 +1,9 @@
 "use strict";
 
 import * as path from "path";
-import { workspace, ExtensionContext, window, TextEdit, commands  } from "vscode";
+import { workspace, ExtensionContext, window, TextEdit, commands } from "vscode";
 import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from "vscode-languageclient/node";
+import { registerVarAutocomplete } from "./varAutocomplete";
 
 let client: LanguageClient;
 
@@ -29,7 +30,7 @@ export function activate(context: ExtensionContext) {
   client.registerProposedFeatures();
 
   function fix() {
-    client.sendNotification("fix", window.activeTextEditor.document.uri.toString() );
+    client.sendNotification("fix", window.activeTextEditor.document.uri.toString());
   }
 
   function applyTextEdits(uri: string, documentVersion: number, edits: TextEdit[]) {
@@ -54,6 +55,10 @@ export function activate(context: ExtensionContext) {
       });
     }
   }
+
+  // VAR AUTOCOMPLETE sugar feature. Comment this line if you want to disable
+  registerVarAutocomplete(context);
+
   context.subscriptions.push(
     client.start(),
     commands.registerCommand("_tsql-lint.change", applyTextEdits),
