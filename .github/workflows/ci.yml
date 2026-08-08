@@ -15,7 +15,8 @@ jobs:
           node-version: '20'
           cache: 'npm'
       - run: npm ci
-      - run: node scripts/check-dependency-age.mjs .
+      - run: npm audit --audit-level=high --omit=dev
+      - run: node scripts/check-dependency-age.mjs . --omit-dev
       - run: node scripts/check-dependency-age.mjs client
       - run: node scripts/check-dependency-age.mjs server
       - run: npm run lint

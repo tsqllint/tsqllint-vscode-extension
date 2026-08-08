@@ -6,7 +6,9 @@ import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 
 async function main () {
-  const dir = process.argv[2] ?? '.'
+  const args = process.argv.slice(2)
+  const omitDev = args.includes('--omit-dev')
+  const dir = args.find(a => !a.startsWith('--')) ?? '.'
   const MAX_AGE_DAYS = Number(process.env.MAX_DEPENDENCY_AGE_DAYS ?? 30)
   const cutoff = Date.now() - MAX_AGE_DAYS * 24 * 60 * 60 * 1000
 
@@ -15,6 +17,7 @@ async function main () {
   const resolved = new Map()
   for (const [path, pkg] of Object.entries(lock.packages ?? {})) {
     if (!path.startsWith('node_modules/') || !pkg.version) continue
+    if (omitDev && pkg.dev) continue
     const name = path.replace(/^.*node_modules\//, '')
     if (!resolved.has(name)) resolved.set(name, new Set())
     resolved.get(name).add(pkg.version)
